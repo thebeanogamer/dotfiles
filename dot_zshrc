@@ -1,0 +1,169 @@
+export PATH=$HOME/bin:/usr/local/bin:$PATH
+
+unsetopt BASH_AUTO_LIST
+
+export ZSH="/home/daniel/.oh-my-zsh"
+
+source ~/.zplug/init.zsh
+
+plugins=(git)
+
+source $ZSH/oh-my-zsh.sh
+
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+PATH=/home/daniel/.local/share/umake/bin:$PATH
+
+
+export PATH="$HOME/.poetry/bin:$PATH"
+
+if [[ -n $SSH_CONNECTION ]]; then
+   export EDITOR='vim'
+else
+   export EDITOR='nvim'
+fi
+
+alias zshconfig="nvim ~/.zshrc"
+alias ohmyzsh="nvim ~/.oh-my-zsh"
+function powerline_precmd() {
+    PS1="$(powerline-shell --shell zsh $?)"
+}
+
+function install_powerline_precmd() {
+  for s in "${precmd_functions[@]}"; do
+    if [ "$s" = "powerline_precmd" ]; then
+      return
+    fi
+  done
+  precmd_functions+=(powerline_precmd)
+}
+
+if [ "$TERM" != "linux" ]; then
+    install_powerline_precmd
+fi
+
+export VAGRANT_DEFAULT_PROVIDER="libvirt"
+
+eval $(thefuck --alias)
+# You can use whatever you want as an alias, like for Mondays:
+eval $(thefuck --alias FUCK)
+
+export PATH="/home/daniel/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
+
+## Install rbenv
+if [ ! -d "$HOME/.rbenv" ]
+then
+    git clone https://github.com/sstephenson/rbenv.git $HOME/.rbenv
+fi
+if [ -d "$HOME/.rbenv"  ] && [ ! -d "$HOME/.rbenv/plugins/ruby-build" ]
+then
+    git clone https://github.com/sstephenson/ruby-build.git \
+            $HOME/.rbenv/plugins/ruby-build
+fi
+
+## initialize rbenv
+if [ -d $HOME/.rbenv ]
+then
+    export RBENV_ROOT="$HOME/.rbenv"
+    export PATH="$RBENV_ROOT/bin:$PATH"
+    if  type "rbenv" &> /dev/null; then
+        eval "$(rbenv init -)"
+        # Add the version to my prompt 
+        __rbversion (){
+            if  type "ruby" &> /dev/null; then
+                rbenv_ruby_version=$(rbenv version | sed -e 's/ .*//')
+                printf $rbenv_ruby_version
+            fi
+        }
+        export PS1="rb:\$(__rbversion)|$PS1"
+    fi
+fi
+
+alias git=hub
+alias i="sudo apt install -y"
+alias r="sudo apt remove -y"
+alias up="sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y"
+alias n=nvim
+alias blue="sudo service bluetooth restart"
+alias sl="ls"
+alias t="tmux"
+alias note="notes"
+alias q="exit"
+alias kali="ssh kali"
+alias who="whois"
+alias dockerclean="docker rm $(docker ps -a -q)"
+alias dockerstop="docker stop $(docker ps -a -q)"
+alias dockerpurge="docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)"
+
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zplug/zplug"
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "plugins/colored-man-paged", from:oh-my-zsh
+zplug "plugins/colorize", from:oh-my-zsh
+zplug "plugins/command-not-found", from:oh-my-zsh
+zplug "plugins/copydir", from:oh-my-zsh
+zplug "plugins/copyfile", from:oh-my-zsh
+zplug "plugins/dircycle", from:oh-my-zsh
+zplug "plugins/extract", from:oh-my-zsh
+zplug "plugins/history", from:oh-my-zsh
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/go", from:oh-my-zsh
+zplug "plugins/pip", from:oh-my-zsh
+zplug "plugins/sudo", from:oh-my-zsh
+zplug "plugins/aws", from:oh-my-zsh
+zplug "plugins/debian", from:oh-my-zsh
+zplug "plugins/dirhistory", from:oh-my-zsh
+zplug "plugins/npm", from:oh-my-zsh
+zplug "plugins/python", from:oh-my-zsh
+zplug "plugins/pyenv", from:oh-my-zsh
+zplug "plugins/svn", from:oh-my-zsh
+zplug "plugins/tmux", from:oh-my-zsh
+zplug "plugins/vscode", from:oh-my-zsh
+zplug "b4b4r07/enhancd", use:enhancd.sh
+zplug "plugins/rbenv", from:oh-my-zsh
+zplug "supercrabtree/k"
+zplug "hlissner/zsh-autopair", defer:2
+zplug "felixr/docker-zsh-completion"
+zplug "tarrasch/zsh-bd"
+zplug "srijanshetty/zsh-pip-completion"
+
+if [ -r ~/.zshrc_work ]; then
+    source ~/.zshrc_work
+fi
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load
+
+HISTFILE=~/.zsh_history
+HISTSIZE=100000
+SAVEHIST=100000
+
+setopt append_history           # Dont overwrite history
+setopt extended_history         # Also record time and duration of commands.
+setopt share_history            # Share history between multiple shells
+setopt hist_expire_dups_first   # Clear duplicates when trimming internal hist.
+setopt hist_find_no_dups        # Don't display duplicates during searches.
+setopt hist_ignore_dups         # Ignore consecutive duplicates.
+setopt hist_ignore_all_dups     # Remember only one unique copy of the command.
+setopt hist_reduce_blanks       # Remove superfluous blanks.
+setopt hist_save_no_dups        # Omit older commands in favor of newer ones.
+
+setopt pushd_ignore_dups        # Dont push copies of the same dir on stack.
+setopt pushd_minus              # Reference stack entries with "-".
