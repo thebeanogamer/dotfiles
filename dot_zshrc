@@ -98,9 +98,14 @@ alias note="notes"
 alias q="exit"
 alias kali="ssh kali"
 alias who="whois"
-alias dockerclean="docker rm $(docker ps -a -q)"
-alias dockerstop="docker stop $(docker ps -a -q)"
-alias dockerpurge="docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)"
+alias sn="sudo nvim"
+alias dockerclean='docker rm $(docker ps -a -q)'
+alias dockerstop='docker stop $(docker ps -a -q)'
+alias dockerpurge='docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)'
+alias c="clear"
+alias glog="git log --graph --decorate --pretty=oneline --abbrev-commit"
+alias cp='rsync -aP'
+alias back="cd -"
 
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zplug/zplug"
@@ -129,12 +134,14 @@ zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/tmux", from:oh-my-zsh
 zplug "plugins/vscode", from:oh-my-zsh
 zplug "b4b4r07/enhancd", use:enhancd.sh
-zplug "plugins/rbenv", from:oh-my-zsh
+#zplug "plugins/rbenv", from:oh-my-zsh
 zplug "supercrabtree/k"
 zplug "hlissner/zsh-autopair", defer:2
 zplug "felixr/docker-zsh-completion"
 zplug "tarrasch/zsh-bd"
 zplug "srijanshetty/zsh-pip-completion"
+
+[[ -s "/etc/grc.zsh" ]] && source /etc/grc.zsh
 
 if [ -r ~/.zshrc_work ]; then
     source ~/.zshrc_work
