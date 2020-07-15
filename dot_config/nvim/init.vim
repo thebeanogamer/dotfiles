@@ -24,6 +24,11 @@ Plug 'PProvost/vim-ps1'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-syntastic/syntastic'
 Plug 'preservim/nerdtree'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'luochen1990/rainbow'
+Plug 'hashivim/vim-terraform'
+Plug 'rodjek/vim-puppet'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
@@ -35,7 +40,10 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
 let g:airline_powerline_fonts = 1
+autocmd BufNewFile,BufRead *.conf set syntax=ini
 filetype plugin indent on       " required
 set number
 set mouse=a
 set title
+cnoreabbrev nt NERDTree
+let g:rainbow_active = 1 

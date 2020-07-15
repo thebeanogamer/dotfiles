@@ -86,6 +86,8 @@ then
     fi
 fi
 
+export PATH="/home/daniel/.local/git-fuzzy/bin:$PATH"
+
 alias git=hub
 alias i="sudo apt install -y"
 alias r="sudo apt remove -y"
@@ -106,6 +108,8 @@ alias c="clear"
 alias glog="git log --graph --decorate --pretty=oneline --abbrev-commit"
 alias cp='rsync -aP'
 alias back="cd -"
+alias cat="batcat --style='grid,changes,header,numbers' --map-syntax conf:toml"
+alias ls="exa"
 
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zplug/zplug"
