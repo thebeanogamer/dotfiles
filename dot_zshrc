@@ -1,6 +1,7 @@
 export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 unsetopt BASH_AUTO_LIST
+export ZSH_DISABLE_COMPFIX="true"
 
 export ZSH="/home/daniel/.oh-my-zsh"
 
@@ -19,8 +20,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 PATH=/home/daniel/.local/share/umake/bin:$PATH
 
-
-export PATH="$HOME/.poetry/bin:$PATH"
+export PATH="$HOME/.poetry/bin:$HOME/.cargo/bin:$PATH"
 
 if [[ -n $SSH_CONNECTION ]]; then
    export EDITOR='vim'
@@ -49,6 +49,33 @@ fi
 
 export VAGRANT_DEFAULT_PROVIDER="libvirt"
 
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
+
+function atoi
+{
+#Returns the integer representation of an IP arg, passed in ascii dotted-decimal notation (x.x.x.x)
+IP=$1; IPNUM=0
+for (( i=0 ; i<4 ; ++i )); do
+((IPNUM+=${IP%%.*}*$((256**$((3-${i}))))))
+IP=${IP#*.}
+done
+echo $IPNUM 
+} 
+function itoa
+{
+#returns the dotted-decimal ascii form of an IP arg passed in integer format
+echo -n $(($(($(($((${1}/256))/256))/256))%256)).
+echo -n $(($(($((${1}/256))/256))%256)).
+echo -n $(($((${1}/256))%256)).
+echo $((${1}%256)) 
+}
+
+function mkcd {
+  mkdir "$1"
+  cd "$1"
+}
+
 eval $(thefuck --alias)
 # You can use whatever you want as an alias, like for Mondays:
 eval $(thefuck --alias FUCK)
@@ -57,41 +84,46 @@ export PATH="/home/daniel/.pyenv/bin:$PATH"
 eval "$(pyenv init -)"
 eval "$(pyenv virtualenv-init -)"
 
-## Install rbenv
-if [ ! -d "$HOME/.rbenv" ]
-then
-    git clone https://github.com/sstephenson/rbenv.git $HOME/.rbenv
-fi
-if [ -d "$HOME/.rbenv"  ] && [ ! -d "$HOME/.rbenv/plugins/ruby-build" ]
-then
-    git clone https://github.com/sstephenson/ruby-build.git \
-            $HOME/.rbenv/plugins/ruby-build
-fi
+### Install rbenv
+#if [ ! -d "$HOME/.rbenv" ]
+#then
+#    git clone https://github.com/sstephenson/rbenv.git $HOME/.rbenv
+#fi
+#if [ -d "$HOME/.rbenv"  ] && [ ! -d "$HOME/.rbenv/plugins/ruby-build" ]
+#then
+#    git clone https://github.com/sstephenson/ruby-build.git \
+#            $HOME/.rbenv/plugins/ruby-build
+#fi
 
 ## initialize rbenv
-if [ -d $HOME/.rbenv ]
-then
-    export RBENV_ROOT="$HOME/.rbenv"
-    export PATH="$RBENV_ROOT/bin:$PATH"
-    if  type "rbenv" &> /dev/null; then
-        eval "$(rbenv init -)"
-        # Add the version to my prompt 
-        __rbversion (){
-            if  type "ruby" &> /dev/null; then
-                rbenv_ruby_version=$(rbenv version | sed -e 's/ .*//')
-                printf $rbenv_ruby_version
-            fi
-        }
-        export PS1="rb:\$(__rbversion)|$PS1"
-    fi
-fi
+#if [ -d $HOME/.rbenv ]
+#then
+#    export RBENV_ROOT="$HOME/.rbenv"
+#    export PATH="$RBENV_ROOT/bin:$PATH"
+#    if  type "rbenv" &> /dev/null; then
+#        eval "$(rbenv init -)"
+#        # Add the version to my prompt 
+#        __rbversion (){
+#            if  type "ruby" &> /dev/null; then
+#                rbenv_ruby_version=$(rbenv version | sed -e 's/ .*//')
+#                printf $rbenv_ruby_version
+#            fi
+#        }
+#        export PS1="rb:\$(__rbversion)|$PS1"
+#    fi
+#fi
+
+export VAGRANT_DEFAULT_PROVIDER=libvirt
 
 export PATH="/home/daniel/.local/git-fuzzy/bin:$PATH"
+export PATH="/home/daniel/go/bin:$PATH"
+fpath+=~/.zfunc
 
+alias ssh="ssh -q"
 alias git=hub
-alias i="sudo apt install -y"
-alias r="sudo apt remove -y"
-alias up="sudo apt update && sudo apt dist-upgrade -y && sudo apt autoremove -y"
+alias i="sudo dnf install -y"
+alias r="sudo dnf remove -y"
+alias up="sudo dnf clean all && sudo dnf update -y && dnf clean all -y"
 alias n=nvim
 alias blue="sudo service bluetooth restart"
 alias sl="ls"
@@ -104,12 +136,17 @@ alias sn="sudo nvim"
 alias dockerclean='docker rm $(docker ps -a -q)'
 alias dockerstop='docker stop $(docker ps -a -q)'
 alias dockerpurge='docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q)'
+alias virsh='sudo virsh'
 alias c="clear"
 alias glog="git log --graph --decorate --pretty=oneline --abbrev-commit"
 alias cp='rsync -aP'
 alias back="cd -"
-alias cat="batcat --style='grid,changes,header,numbers' --map-syntax conf:toml"
+alias cat="bat --style='grid,changes,header,numbers' --map-syntax conf:toml"
 alias ls="exa"
+alias vim="nvim"
+alias vi="nvim"
+alias ipy="ipython --no-banner"
+alias mobsf="docker run -it --name mobsf -p 8000:8000 -v /home/daniel/mobsf:/root/.MobSF opensecurity/mobile-security-framework-mobsf:latest"
 
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zplug/zplug"
@@ -125,7 +162,7 @@ zplug "plugins/dircycle", from:oh-my-zsh
 zplug "plugins/extract", from:oh-my-zsh
 zplug "plugins/history", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/go", from:oh-my-zsh
+zplug "plugins/golang", from:oh-my-zsh
 zplug "plugins/pip", from:oh-my-zsh
 zplug "plugins/sudo", from:oh-my-zsh
 zplug "plugins/aws", from:oh-my-zsh
@@ -137,6 +174,8 @@ zplug "plugins/pyenv", from:oh-my-zsh
 zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/tmux", from:oh-my-zsh
 zplug "plugins/vscode", from:oh-my-zsh
+zplug "plugins/zsh", from:oh-my-zsh
+zplug "plugins/dnf", from:oh-my-zsh
 zplug "b4b4r07/enhancd", use:enhancd.sh
 #zplug "plugins/rbenv", from:oh-my-zsh
 zplug "supercrabtree/k"

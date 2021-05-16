@@ -2,20 +2,26 @@
 	name = thebeanogamer
 	email = thebeanogamer@gmail.com
 	signingkey = 9F27EEFDAC7C7A5375F37AB40529C9D7DB15CF48
+
 [commit]
 	gpgsign = true
+
 [core]
 	editor = nvim
-    	pager = delta
+ 	pager = delta
+
 [hub]
 	protocol = https
+
 [credential]
 	helper = store
+
 [help]
 	autocorrect = 10
 
 [interactive]
         diffFilter = delta --color-only
+
 [delta]
     	features = decorations
     	whitespace-error-style = 22 reverse
@@ -24,3 +30,9 @@
     	commit-decoration-style = bold yellow box ul
     	file-style = bold yellow ul
     	file-decoration-style = none
+
+[pull]
+	rebase = true
+
+[push]
+	default = current

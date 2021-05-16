@@ -14,6 +14,18 @@ noremap <C-S-Tab> :<C-U>tabprevious<CR>
 inoremap <C-S-Tab> <C-\><C-N>:tabprevious<CR>
 cnoremap <C-S-Tab> <C-C>:tabprevious<CR>
 
+filetype plugin indent on
+" On pressing tab, insert 2 spaces
+set expandtab
+" show existing tab with 2 spaces width
+set tabstop=2
+set softtabstop=2
+" when indenting with '>', use 2 spaces width
+set shiftwidth=2
+
+
+let g:ale_fix_on_save = 1
+let b:ale_fixers = { 'ruby': [ 'rubocop' ],'puppet': [ 'puppetlint' ] }
 
 " Declare the list of plugins.
 Plug 'tpope/vim-sensible'
@@ -29,6 +41,8 @@ Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'luochen1990/rainbow'
 Plug 'hashivim/vim-terraform'
 Plug 'rodjek/vim-puppet'
+Plug 'tibabit/vim-templates'
+Plug 'dense-analysis/ale'
 
 " List ends here. Plugins become visible to Vim after this call.
 call plug#end()
