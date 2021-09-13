@@ -113,17 +113,17 @@ eval "$(pyenv virtualenv-init -)"
 #    fi
 #fi
 
-export VAGRANT_DEFAULT_PROVIDER=libvirt
-
+fpath=($fpath ~/.zsh/completion)
 export PATH="/home/daniel/.local/git-fuzzy/bin:$PATH"
 export PATH="/home/daniel/go/bin:$PATH"
 fpath+=~/.zfunc
+
 
 alias ssh="ssh -q"
 alias git=hub
 alias i="sudo dnf install -y"
 alias r="sudo dnf remove -y"
-alias up="sudo dnf clean all && sudo dnf update -y && dnf clean all -y"
+alias up="sudo dnf update -y --refresh"
 alias n=nvim
 alias blue="sudo service bluetooth restart"
 alias sl="ls"
